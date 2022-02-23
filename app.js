@@ -2,6 +2,7 @@ const qrcode = require('qrcode-terminal');
 // const http = require('http')
 var express = require('express');
 var app = express();
+
 const { Client } = require('whatsapp-web.js');
 var fs = require("fs");
 const client = new Client({ 
@@ -30,11 +31,13 @@ app.get('/listUsers', function (req, res) {
 //     console.log("Listening on port 80");
 //   });
 
-  var server = app.listen(8081, function () {
-    var host = server.address().address
-    var port = server.address().port
-    console.log("Example app listening at http://%s:%s", host, port)
- })
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+app.listen(port, () => {
+  console.log(`Server successfully running on ${port}`);
+});
 
 client.on('qr', qr => {
     qrcode.generate(qr, {small: true});
