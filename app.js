@@ -34,10 +34,7 @@ app.get('/listUsers', function (req, res) {
        res.end( data );
     });
 
-    client.on('ready', () => {
-        console.log('Client is ready!');
-        console.log('Client is ready!');
-    });
+    client.sendMessage('919213109261@c.us', 'sendddd');
  })
   
 //   server.listen(process.env.PORT || 80, () => {
@@ -53,12 +50,18 @@ app.listen(port, () => {
 });
 
 
-
+client.on('ready', () => {
+    console.log('Client is ready!');
+    
+    client.sendMessage('919213109261@c.us', 'hiii');
+});
 
 client.on('message', message => {
 	if(message.body === '!ping') {
 		message.reply('pong');
 	}
 });
+
+
 
 client.initialize();
