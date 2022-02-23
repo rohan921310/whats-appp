@@ -7,7 +7,9 @@ const client = new Client({
 	args: ['--no-sandbox']
     }
 });
+// https://medium.com/como-programar-em-1-dia/como-fazer-um-rob%C3%B4-de-whatsapp-chatbot-em-1-dia-644ee98054d7
 
+// jontewks/puppeteer
 
 var server = http.createServer((req, res) => {
     //your stuff
