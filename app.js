@@ -20,10 +20,23 @@ const client = new Client({
 //   });
 
 
+
+client.on('qr', qr => {
+    qrcode.generate(qr, {small: true});
+    console.log(qr);
+    console.log('d');
+});
+
+
 app.get('/listUsers', function (req, res) {
     fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
        console.log( data );
        res.end( data );
+    });
+
+    client.on('ready', () => {
+        console.log('Client is ready!');
+        console.log('Client is ready!');
     });
  })
   
@@ -39,16 +52,7 @@ app.listen(port, () => {
   console.log(`Server successfully running on ${port}`);
 });
 
-client.on('qr', qr => {
-    qrcode.generate(qr, {small: true});
-    console.log(qr);
-    console.log('d');
-});
 
-client.on('ready', () => {
-    console.log('Client is ready!');
-    console.log('Client is ready!');
-});
 
 
 client.on('message', message => {
