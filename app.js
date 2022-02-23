@@ -1,6 +1,14 @@
 const qrcode = require('qrcode-terminal');
 
 const { Client } = require('whatsapp-web.js');
+var app = require('express')();
+var http = require('http').createServer(app);
+
+var server_port = process.env.YOUR_PORT || process.env.PORT || 3001;
+http.listen(server_port, () => {
+    console.log("Started on : "+ server_port);
+})
+
 const client = new Client({ 
     puppeteer: {
         headless: true,
