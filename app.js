@@ -1,6 +1,9 @@
 const qrcode = require('qrcode-terminal');
-const http = require('http')
+// const http = require('http')
+var express = require('express');
+var app = express();
 const { Client } = require('whatsapp-web.js');
+var fs = require("fs");
 const client = new Client({ 
     puppeteer: {
         headless: true,
@@ -11,13 +14,27 @@ const client = new Client({
 
 // jontewks/puppeteer
 
-var server = http.createServer((req, res) => {
-    //your stuff
-  });
+// var server = http.createServer((req, res) => {
+//     //your stuff
+//   });
+
+
+app.get('/listUsers', function (req, res) {
+    fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
+       console.log( data );
+       res.end( data );
+    });
+ })
   
-  server.listen(process.env.PORT || 80, () => {
-    console.log("Listening on port 80");
-  });
+//   server.listen(process.env.PORT || 80, () => {
+//     console.log("Listening on port 80");
+//   });
+
+  var server = app.listen(8081, function () {
+    var host = server.address().address
+    var port = server.address().port
+    console.log("Example app listening at http://%s:%s", host, port)
+ })
 
 client.on('qr', qr => {
     qrcode.generate(qr, {small: true});
