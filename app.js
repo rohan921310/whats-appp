@@ -19,13 +19,18 @@ const client = new Client({
 //     //your stuff
 //   });
 
-
+var arr = [];
 function start() {
 
     client.on('qr', qr => {
         qrcode.generate(qr, { small: true });
-        console.log(qr);
+        // console.log(qr);
         console.log('d');
+        if(arr != []){
+            arr.pop();
+        }
+        arr.push(qr);
+        // console.log(arr);
     });
 
 
@@ -49,11 +54,37 @@ function start() {
 
 app.get('/listUsers', function (req, res) {
     fs.readFile(__dirname + "/" + "users.json", 'utf8', function (err, data) {
-        console.log(data);
-        res.end(data);
+        // console.log(data);
+        // console.log(arr);
+        // res.end(arr);
     });
+    // qrcode.generate(arr, { small: true });
+    var QRCode = require('qrcode')
+    var opts = {
+        errorCorrectionLevel: 'H',
+        type: 'image/jpeg',
+        quality: 0.3,
+        margin: 1,
+        color: {
+          dark:"#010599FF",
+          light:"#FFBF60FF"
+        }
+      }
+      
+      QRCode.toDataURL(arr, opts, function (err, url) {
+        if (err) throw err
+      
+        // var img = document.getElementById('image')
+        // img.src = url
 
-    client.sendMessage('919213109261@c.us', 'sendddd');
+        res.send(`
+        <h2>${arr}</h2>
+        <div><img src='${url}'/></div>
+      `)
+      })
+
+      
+// client.sendMessage('919213109261@c.us', 'sendddd');
 })
 
 let port = process.env.PORT;
