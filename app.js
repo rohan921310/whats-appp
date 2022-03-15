@@ -3,11 +3,15 @@ const qrcode = require('qrcode-terminal');
 var express = require('express');
 var app = express();
 
+// const bodyParser = require('body-parser');
+// app.use(bodyParser);
+// app.use(express.bodyParser);
+
 const { Client } = require('whatsapp-web.js');
 var fs = require("fs");
 const client = new Client({
     puppeteer: {
-        headless: true,
+        headless: false,
         args: ['--no-sandbox']
     }
 });
@@ -20,13 +24,14 @@ const client = new Client({
 //   });
 
 var arr = [];
+var status = 0;
 function start() {
 
     client.on('qr', qr => {
         qrcode.generate(qr, { small: true });
         // console.log(qr);
         console.log('d');
-        if(arr != []){
+        if (arr != []) {
             arr.pop();
         }
         arr.push(qr);
@@ -36,8 +41,8 @@ function start() {
 
     client.on('ready', () => {
         console.log('Client is ready!');
-
-        client.sendMessage('919213109261@c.us', 'hiii');
+        status = 1;
+        // client.sendMessage('919213109261@c.us', 'hiii');
     });
 
     client.on('message', message => {
@@ -45,7 +50,6 @@ function start() {
             message.reply('pong');
         }
     });
-
 
     client.initialize();
 }
@@ -66,14 +70,14 @@ app.get('/listUsers', function (req, res) {
         quality: 0.3,
         margin: 1,
         color: {
-          dark:"#010599FF",
-          light:"#FFBF60FF"
+            dark: "#010599FF",
+            light: "#FFBF60FF"
         }
-      }
-      
-      QRCode.toDataURL(arr, opts, function (err, url) {
+    }
+
+    QRCode.toDataURL(arr, opts, function (err, url) {
         if (err) throw err
-      
+
         // var img = document.getElementById('image')
         // img.src = url
 
@@ -81,11 +85,22 @@ app.get('/listUsers', function (req, res) {
         <h2>${arr}</h2>
         <div><img src='${url}'/></div>
       `)
-      })
+    })
 
-      
-// client.sendMessage('919213109261@c.us', 'sendddd');
+
+    // client.sendMessage('919213109261@c.us', 'sendddd');
 })
+app.get('/checkStatus', (req, res) => {
+        res.json({status: status}) 
+  })
+
+
+app.post('/sendMessage', (req, res) => {
+      var text =   req.query.text.split('_').join(' ')
+        client.sendMessage('91'+req.query.phone +'@c.us', text);
+        res.json({status: 1}) 
+  })
+
 
 let port = process.env.PORT;
 if (port == null || port == "") {
@@ -96,11 +111,9 @@ app.listen(port, () => {
 });
 
 client.on('disconnected', (reason) => {
-    console.log('hj', reason)
+    console.log('hj', reason);
+    status = 0;
     start();
 });
 
-
 start();
-
-
