@@ -11,7 +11,7 @@ const { Client } = require('whatsapp-web.js');
 var fs = require("fs");
 const client = new Client({
     puppeteer: {
-        headless: false,
+        headless: true,
         args: ['--no-sandbox']
     }
 });
